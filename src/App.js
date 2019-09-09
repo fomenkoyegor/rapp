@@ -1,23 +1,17 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import TodosList from "./TodosList";
 
 function App() {
     const text = 'hello react';
-    const [todos, setTodos] = useState([
-        {
-            userId: 1,
-            id: 1,
-            title: "delectus aut autem",
-            completed: true
-        },
-        {
-            userId: 2,
-            id: 2,
-            title: "quis ut nam facilis et officia qui",
-            completed: false
-        },
-    ]);
+    const [todos, setTodos] = useState([]);
     const [title, setTitle] = useState('');
+    useEffect(() => {
+        const savedTodos = localStorage.getItem('todos') || [];
+        setTodos(JSON.parse(savedTodos));
+    }, []);
+    useEffect(() => {
+        localStorage.setItem('todos', JSON.stringify(todos))
+    }, [todos]);
     const addTodo = event => {
         if (event.key === 'Enter') {
             setTodos([...todos, {

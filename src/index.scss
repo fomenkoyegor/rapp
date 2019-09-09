@@ -12,6 +12,7 @@
   width: 90%;
   margin:1em auto;
   box-shadow: 1px 1px 1px;
+  overflow-x: hidden;
 }
 
 .todo__item{
@@ -20,6 +21,7 @@
   box-shadow: 1px 1px 5px rgba(0,0,0,0.3);
   cursor: pointer;
   transition:all 0.2s ease-in-out;
+  animation: show 1s linear;
   &:hover{
     transform: translateY(-3px);
     box-shadow: 1px 1px 15px rgba(0,0,0,0.9);
@@ -27,5 +29,16 @@
   &-completed{
     background-color: rgba(82,255,138,0.34);
     text-decoration: line-through;
+  }
+}
+
+@keyframes show {
+  from{
+    opacity: 0;
+    transform: translateX(-50%);
+  }
+  to{
+    opacity: 1;
+    transform: translateX(0);
   }
 }
