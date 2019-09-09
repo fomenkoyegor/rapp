@@ -1,29 +1,32 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useReducer} from 'react';
+import {Context} from './context';
 import TodosList from "./TodosList";
+import reduccer from './reduccer';
 
 function App() {
     const text = 'hello react';
-    const [todos, setTodos] = useState([]);
+    const savedTodos = localStorage.getItem('todos') || [];
+    const [state, dispatch] = useReducer(reduccer, JSON.parse(savedTodos));
     const [title, setTitle] = useState('');
+
     useEffect(() => {
-        const savedTodos = localStorage.getItem('todos') || [];
-        setTodos(JSON.parse(savedTodos));
-    }, []);
-    useEffect(() => {
-        localStorage.setItem('todos', JSON.stringify(todos))
-    }, [todos]);
+        localStorage.setItem('todos', JSON.stringify(state))
+    }, [state]);
+
+
     const addTodo = event => {
         if (event.key === 'Enter') {
-            setTodos([...todos, {
-                id: Date.now(),
-                title,
-                completed: false,
-                userId: 1
-            }]);
+            dispatch({
+                type: 'add',
+                payload: title
+            });
             setTitle('');
         }
     };
     return (
+        <Context.Provider value={{
+            dispatch
+        }}>
         <div className="App">
             <h1>{text}</h1>
             <div className="add-todo">
@@ -34,8 +37,9 @@ function App() {
                 />
             </div>
             <hr/>
-            <TodosList todos={todos}/>
+            <TodosList todos={state}/>
         </div>
+        </Context.Provider>
     );
 }
 
